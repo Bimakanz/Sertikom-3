@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class TahunAjar extends Model
 {
-    
+    protected $table = 'tahun_ajars';
+
     protected $fillable = [
         'nama_tahun_ajar',
         'kode_tahun_ajar',
     ];
-    public  function siswas()
+    public function siswas()
     {
         return $this->hasMany(Siswa::class);
     }
@@ -21,4 +22,9 @@ class TahunAjar extends Model
     {
         return $this->hasMany(KelasDetail::class);
     }
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class);
+    }
+
 }

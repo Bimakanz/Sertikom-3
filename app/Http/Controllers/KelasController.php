@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Jurusan;
 use App\Models\Kelas;
+use App\Models\TahunAjar;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -12,56 +13,55 @@ class KelasController extends Controller
     /**
      * Display a listing of the resource.
      */
-     public function index()
+    public function index()
     {
-        $data = Kelas::with('jurusan')->latest()->get();
-        return view('kelas.index', compact('data'));
+        $kelas = Kelas::with('tahunAjar')->latest()->get();
+        return view('kelas.index', compact('kelas'));
     }
 
     public function create()
     {
         $jurusan = Jurusan::all();
-        return view('kelas.create', compact('jurusan'));
+        $tahunAjar = TahunAjar::all();
+
+        return view('Kelas.create', compact('jurusan', 'tahunAjar'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama_kelas' => 'required',
-            'level_kelas' => 'required|integer',
-            'jurusan_id' => 'required|exists:jurusans,id',
+            'level_kelas' => 'required',
+            'tahun_ajar_id' => 'required|exists:tahun_ajars,id'
         ]);
 
         Kelas::create($request->all());
 
-        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil ditambahkan');
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan');
     }
 
-    public function edit($id)
+    public function edit(Kelas $kela)
     {
-        $item = Kelas::findOrFail($id);
         $jurusan = Jurusan::all();
-        return view('kelas.edit', compact('item', 'jurusan'));
-    }
+        $tahunAjar = TahunAjar::all();
 
-    public function update(Request $request, $id)
-    {
-        $item = Kelas::findOrFail($id);
-
-        $request->validate([
-            'nama_kelas' => 'required',
-            'level_kelas' => 'required|integer',
-            'jurusan_id' => 'required|exists:jurusans,id',
+        return view('kelas.edit', [
+            'kelas' => $kela,
+            'jurusan' => $jurusan,
+            'tahunAjar' => $tahunAjar
         ]);
-
-        $item->update($request->all());
-
-        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil diperbarui');
     }
 
-    public function destroy($id)
+    public function update(Request $request, Kelas $kela)
     {
-        Kelas::findOrFail($id)->delete();
-        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil dihapus');
+        $kela->update($request->all());
+
+    return redirect()->route('kelas.index');
+    }
+
+    public function destroy(Kelas $kelas)
+    {
+        $kelas->delete();
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus');
     }
 }

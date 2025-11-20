@@ -1,115 +1,111 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Tambah Siswa</h2>
-    </x-slot>
+    <div class="px-8 py-6">
+        <h1 class="text-2xl font-bold mb-6">Tambah Siswa</h1>
 
-    <div class="p-6 max-w-4xl mx-auto">
-        <div class="bg-white p-6 rounded-lg shadow">
-
-            <form action="{{ route('siswa.store') }}" method="POST" enctype="multipart/form-data">
+        <div class="bg-white rounded-xl p-6 border shadow-sm">
+            <form action="{{ route('siswa.store') }}" method="POST">
                 @csrf
 
                 {{-- NISN --}}
                 <div class="mb-4">
-                    <label class="block font-medium mb-1">NISN</label>
-                    <input type="text" name="nisn"
-                        class="w-full border-gray-300 rounded-lg"
-                        value="{{ old('nisn') }}">
-                    @error('nisn') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    <label class="block mb-1 font-medium">NISN</label>
+                    <input type="text" name="nisn" value="{{ old('nisn') }}"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    @error('nisn') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Nama --}}
+                {{-- Nama Lengkap --}}
                 <div class="mb-4">
-                    <label class="block font-medium mb-1">Nama Lengkap</label>
-                    <input type="text" name="nama"
-                        class="w-full border-gray-300 rounded-lg"
-                        value="{{ old('nama') }}">
-                    @error('nama') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    <label class="block mb-1 font-medium">Nama Lengkap</label>
+                    <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    @error('nama_lengkap') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Jenis Kelamin --}}
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium">Jenis Kelamin</label>
+                    <div class="flex gap-4">
+                        <label>
+                            <input type="radio" name="jenis_kelamin" value="Laki-Laki" {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }}>
+                            Laki-Laki
+                        </label>
+                        <label>
+                            <input type="radio" name="jenis_kelamin" value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }}>
+                            Perempuan
+                        </label>
+                    </div>
+                    @error('jenis_kelamin') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Tanggal Lahir --}}
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium">Tanggal Lahir</label>
+                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    @error('tanggal_lahir') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 {{-- Alamat --}}
                 <div class="mb-4">
-                    <label class="block font-medium mb-1">Alamat</label>
-                    <textarea name="alamat"
-                        class="w-full border-gray-300 rounded-lg">{{ old('alamat') }}</textarea>
-                    @error('alamat') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
-                </div>
-
-                {{-- Tgl lahir --}}
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir"
-                        class="w-full border-gray-300 rounded-lg"
-                        value="{{ old('tanggal_lahir') }}">
-                    @error('tanggal_lahir') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
-                </div>
-
-                {{-- Jenis kelamin --}}
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Jenis Kelamin</label>
-                    <select name="jenis_kelamin" class="w-full border-gray-300 rounded-lg">
-                        <option value="">-- Pilih --</option>
-                        <option value="L" {{ old('jenis_kelamin')=='L' ? 'selected':'' }}>Laki-laki</option>
-                        <option value="P" {{ old('jenis_kelamin')=='P' ? 'selected':'' }}>Perempuan</option>
-                    </select>
-                    @error('jenis_kelamin') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
-                </div>
-
-                {{-- Jurusan --}}
-                <div class="mb-4">
-                    <label class="block font-medium mb-1">Jurusan</label>
-                    <select name="jurusan_id" class="w-full border-gray-300 rounded-lg">
-                        <option value="">-- Pilih Jurusan --</option>
-                        @foreach ($jurusan as $j)
-                            <option value="{{ $j->id }}" {{ old('jurusan_id')==$j->id?'selected':'' }}>
-                                {{ $j->nama_jurusan }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('jurusan_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    <label class="block mb-1 font-medium">Alamat</label>
+                    <textarea name="alamat" rows="3"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">{{ old('alamat') }}</textarea>
+                    @error('alamat') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 {{-- Kelas --}}
                 <div class="mb-4">
-                    <label class="block font-medium mb-1">Kelas</label>
-                    <select name="kelas_id" class="w-full border-gray-300 rounded-lg">
+                    <label class="block mb-1 font-medium">Kelas</label>
+                    <select name="kelas_id"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
                         <option value="">-- Pilih Kelas --</option>
-                        @foreach ($kelas as $k)
-                            <option value="{{ $k->id }}" {{ old('kelas_id')==$k->id?'selected':'' }}>
+                        @foreach($kelas as $k)
+                            <option value="{{ $k->id }}" {{ old('kelas_id') == $k->id ? 'selected' : '' }}>
                                 {{ $k->nama_kelas }}
                             </option>
                         @endforeach
                     </select>
-                    @error('kelas_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    @error('kelas_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Jurusan --}}
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium">Jurusan</label>
+                    <select name="jurusan_id"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        <option value="">-- Pilih Jurusan --</option>
+                        @foreach($jurusan as $j)
+                            <option value="{{ $j->id }}" {{ old('jurusan_id') == $j->id ? 'selected' : '' }}>
+                                {{ $j->nama_jurusan }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('jurusan_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 {{-- Tahun Ajar --}}
                 <div class="mb-4">
-                    <label class="block font-medium mb-1">Tahun Ajar</label>
-                    <select name="tahun_ajar_id" class="w-full border-gray-300 rounded-lg">
-                        <option value="">-- Pilih Tahun --</option>
-                        @foreach ($tahunAjar as $t)
-                            <option value="{{ $t->id }}" {{ old('tahun_ajar_id')==$t->id?'selected':'' }}>
+                    <label class="block mb-1 font-medium">Tahun Ajar</label>
+                    <select name="tahun_ajar_id"
+                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        <option value="">-- Pilih Tahun Ajar --</option>
+                        @foreach($tahunajar as $t)
+                            <option value="{{ $t->id }}" {{ old('tahun_ajar_id') == $t->id ? 'selected' : '' }}>
                                 {{ $t->nama_tahun_ajar }}
                             </option>
                         @endforeach
                     </select>
-                    @error('tahun_ajar_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    @error('tahun_ajar_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Foto --}}
-                <div class="mb-6">
-                    <label class="block font-medium mb-1">Foto (optional)</label>
-                    <input type="file" name="foto" class="w-full">
-                    @error('foto') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                {{-- Tombol --}}
+                <div class="flex justify-end gap-3">
+                    <a href="{{ route('siswa.index') }}" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Batal</a>
+                    <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">Simpan</button>
                 </div>
-
-                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg">
-                    Simpan
-                </button>
 
             </form>
-
         </div>
     </div>
 </x-app-layout>

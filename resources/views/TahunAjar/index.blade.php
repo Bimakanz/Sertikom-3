@@ -13,7 +13,7 @@
         <div class="bg-white rounded-xl p-6 border shadow-sm">
             <table class="w-full">
                 <thead>
-                    <tr class="text-gray-600 text-sm border-b">
+                    <tr class=" text-left  text-gray-600 text-sm border-b">
                         <th class="py-3">Kode Tahun Ajar</th>
                         <th class="py-3">Tahun Ajar</th>
                         <th class="py-3 px-7">Aksi</th>
@@ -23,8 +23,8 @@
                 <tbody class="text-sm">
                     @forelse ($data as $item)
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="py-3 text-center">{{ $item->kode_tahun_ajar }}</td>
-                            <td class="py-3 text-center">{{ $item->nama_tahun_ajar }}</td>
+                            <td class="py-3 text-left">{{ $item->kode_tahun_ajar }}</td>
+                            <td class="py-3 text-left">{{ $item->nama_tahun_ajar }}</td>
                             <td class="py-3 flex items-center gap-2">
 
                                 {{-- EDIT BUTTON --}}

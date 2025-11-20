@@ -10,6 +10,7 @@ class Kelas extends Model
         'nama_kelas',
         'level_kelas',
         'jurusan_id',
+        'tahun_ajar_id',
     ];
 
     public function jurusan()
@@ -24,5 +25,9 @@ class Kelas extends Model
     public function kelas_details()
     {
         return $this->hasMany(KelasDetail::class);
+    }
+    public function tahunAjar()
+    {
+        return $this->belongsTo(\App\Models\TahunAjar::class, 'tahun_ajar_id');
     }
 }

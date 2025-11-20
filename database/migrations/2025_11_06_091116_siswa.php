@@ -1,35 +1,76 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use Illuminate\Http\Request;
+use App\Models\Siswa;
+use App\Models\Kelas;
+use App\Models\Jurusan;
+use App\Models\Tahunajar;
+
+class SiswaController extends Controller
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function index()
     {
-        Schema::create('siswas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nisn')->unique();
-            $table->string('nama_lengkap');
-            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
-            $table->date('tanggal_lahir');
-            $table->text('alamat');
-            $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
-            $table->foreignId('tahun_ajar_id')->constrained('tahun_ajars')->onDelete('cascade');
-            $table->foreignId('jurusan_id')->constrained('jurusans')->onDelete('cascade');
-            $table->timestamps();
-        });
+        $siswa = Siswa::with(['kelas', 'jurusan', 'tahunajar'])->get();
+        return view('siswa.index', compact('siswa'));
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function create()
     {
-        Schema::dropIfExists('siswas');
+        $kelas = Kelas::all();
+        $jurusan = Jurusan::all();
+        $tahunajar = Tahunajar::all();
+        return view('siswa.create', compact('kelas', 'jurusan', 'tahunajar'));
     }
-};
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nisn' => 'required|unique:siswas,nisn',
+            'nama_lengkap' => 'required|string',
+            'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
+            'alamat' => 'required|string',
+            'kelas_id' => 'required|exists:kelas,id',
+            'jurusan_id' => 'required|exists:jurusans,id',
+            'tahun_ajar_id' => 'required|exists:tahun_ajars,id',
+        ]);
+
+        Siswa::create($request->all());
+
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan');
+    }
+
+    public function edit(Siswa $siswa)
+    {
+        $kelas = Kelas::all();
+        $jurusan = Jurusan::all();
+        $tahunajar = Tahunajar::all();
+        return view('siswa.edit', compact('siswa', 'kelas', 'jurusan', 'tahunajar'));
+    }
+
+    public function update(Request $request, Siswa $siswa)
+    {
+        $request->validate([
+            'nisn' => 'required|unique:siswas,nisn,' . $siswa->id,
+            'nama_lengkap' => 'required|string',
+            'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
+            'alamat' => 'required|string',
+            'kelas_id' => 'required|exists:kelas,id',
+            'jurusan_id' => 'required|exists:jurusans,id',
+            'tahun_ajar_id' => 'required|exists:tahun_ajars,id',
+        ]);
+
+        $siswa->update($request->all());
+
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diperbarui');
+    }
+
+    public function destroy(Siswa $siswa)
+    {
+        $siswa->delete();
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus');
+    }
+}

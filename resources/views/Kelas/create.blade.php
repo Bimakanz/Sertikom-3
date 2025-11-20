@@ -7,30 +7,59 @@
             <form action="{{ route('kelas.store') }}" method="POST">
                 @csrf
 
+                {{-- Nama Kelas --}}
                 <div class="mb-4">
-                    <label class="text-sm font-medium">Nama Kelas</label>
-                    <input type="text" name="nama_kelas" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-sm font-medium mb-1">Nama Kelas</label>
+                    <input type="text" name="nama_kelas"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
+                           required>
                 </div>
 
+                {{-- Level Kelas --}}
                 <div class="mb-4">
-                    <label class="text-sm font-medium">Level Kelas (contoh: 10)</label>
-                    <input type="number" name="level_kelas" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-sm font-medium mb-1">Level Kelas</label>
+                    <input type="number" min="1" max="12" name="level_kelas"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
+                           required>
                 </div>
 
+                {{-- Jurusan --}}
                 <div class="mb-4">
-                    <label class="text-sm font-medium">Jurusan</label>
-                    <select name="jurusan_id" class="w-full border rounded-lg px-3 py-2" required>
-                        <option value="">Pilih jurusan</option>
+                    <label class="block text-sm font-medium mb-1">Jurusan</label>
+                    <select name="jurusan_id"
+                            class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
+                            required>
+                        <option value="">-- pilih jurusan --</option>
                         @foreach ($jurusan as $j)
                             <option value="{{ $j->id }}">{{ $j->nama_jurusan }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="flex justify-end gap-3 mt-6">
-                    <a href="{{ route('kelas.index') }}" class="px-4 py-2 border rounded-lg">Batal</a>
-                    <button class="px-4 py-2 bg-gray-900 text-white rounded-lg">Simpan</button>
+                {{-- Tahun Ajar --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Tahun Ajar</label>
+                    <select name="tahun_ajar_id"
+                            class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
+                            required>
+                        <option value="">-- pilih tahun ajar --</option>
+                        @foreach ($tahunAjar as $t)
+                            <option value="{{ $t->id }}">{{ $t->nama_tahun_ajar }}</option>
+                        @endforeach
+                    </select>
                 </div>
+
+                {{-- Buttons --}}
+                <div class="flex justify-end gap-3 mt-6">
+                    <a href="{{ route('kelas.index') }}"
+                       class="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100">
+                        Batal
+                    </a>
+                    <button class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
+                        Simpan
+                    </button>
+                </div>
+
             </form>
         </div>
 
