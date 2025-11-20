@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama_kelas');
             $table->unsignedTinyInteger('level_kelas');
-            $table->foreignId('jurusan)_id')->constrained('jurusans')->onDelete('cascade');
+            $table->foreignId('tahun_ajar_id')->constrained('tahun_ajars')->onDelete('cascade');
+            $table->foreignId('jurusan_id')->constrained('jurusans')->onDelete('cascade');
             $table->timestamps();
         });
     }

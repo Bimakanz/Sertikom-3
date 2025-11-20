@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TahunAjar extends Model
 {
-
+    
     protected $fillable = [
         'nama_tahun_ajar',
         'kode_tahun_ajar',
