@@ -23,30 +23,6 @@
                     @error('nama_lengkap') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Jenis Kelamin --}}
-                <div class="mb-4">
-                    <label class="block mb-1 font-medium">Jenis Kelamin</label>
-                    <div class="flex gap-4">
-                        <label>
-                            <input type="radio" name="jenis_kelamin" value="Laki-Laki" {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Laki-Laki' ? 'checked' : '' }}>
-                            Laki-Laki
-                        </label>
-                        <label>
-                            <input type="radio" name="jenis_kelamin" value="Perempuan" {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Perempuan' ? 'checked' : '' }}>
-                            Perempuan
-                        </label>
-                    </div>
-                    @error('jenis_kelamin') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-
-                {{-- Tanggal Lahir --}}
-                <div class="mb-4">
-                    <label class="block mb-1 font-medium">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $siswa->tanggal_lahir) }}"
-                        class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                    @error('tanggal_lahir') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-
                 {{-- Alamat --}}
                 <div class="mb-4">
                     <label class="block mb-1 font-medium">Alamat</label>
@@ -69,19 +45,6 @@
                     @error('kelas_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Jurusan --}}
-                <div class="mb-4">
-                    <label class="block mb-1 font-medium">Jurusan</label>
-                    <select name="jurusan_id" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                        <option value="">-- Pilih Jurusan --</option>
-                        @foreach($jurusan as $j)
-                            <option value="{{ $j->id }}" {{ old('jurusan_id', $siswa->jurusan_id) == $j->id ? 'selected' : '' }}>
-                                {{ $j->nama_jurusan }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('jurusan_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
 
                 {{-- Tahun Ajar --}}
                 <div class="mb-4">

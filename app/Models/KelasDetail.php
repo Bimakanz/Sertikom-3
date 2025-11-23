@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KelasDetail extends Model
 {
-protected $fillable = [
+    protected $fillable = [
         'kelas_id',
         'tahun_ajar_id',
         'siswa_id',
@@ -23,7 +23,7 @@ protected $fillable = [
         return $this->belongsTo(TahunAjar::class);
     }
 
-    public function siswas()
+    public function siswa()
     {
         return $this->belongsTo(Siswa::class);
     }

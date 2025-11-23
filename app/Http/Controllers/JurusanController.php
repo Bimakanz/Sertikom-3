@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class JurusanController extends Controller
      */
      public function index()
     {
-        $data = Jurusan::latest()->get();
+        $data = Jurusan::latest()->paginate(5);
         return view('jurusan.index', compact('data'));
     }
 
@@ -61,8 +62,15 @@ class JurusanController extends Controller
     }
 
     public function destroy($id)
-    {
-        Jurusan::findOrFail($id)->delete();
+    {   
+        // load the jurusan so we can reference its fields for the activity log
+        $jurusan = Jurusan::findOrFail($id);
+
+        ActivityLog::create([
+            'description' => 'Jurusan di Hapus: ' . ($jurusan->nama_jurusan ?? $jurusan->kode_jurusan)
+        ]);
+
+        $jurusan->delete();
         return redirect()->route('jurusan.index')->with('success', 'Jurusan berhasil dihapus');
     }
 }

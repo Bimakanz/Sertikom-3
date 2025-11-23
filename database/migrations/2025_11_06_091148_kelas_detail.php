@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,12 +12,14 @@ return new class extends Migration
     {
         Schema::create('kelas_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kelas_id')->constrained('kelas')->CascadeonDelete();
-            $table->foreignId('tahun_ajar_id')->constrained('tahun_ajars')->CascadeonDelete();
-            $table->foreignId('jurusan_id')->constrained('jurusans')->CascadeonDelete();
+            $table->foreignId('siswa_id')->constrained('siswas')->cascadeOnDelete();
+            $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();  // WAJIB ADA
+            $table->foreignId('tahun_ajar_id')->constrained('tahun_ajars')->cascadeOnDelete();
             $table->enum('status', ['Aktif', 'Tidak Aktif'])->default('Aktif');
             $table->timestamps();
         });
+
+
     }
 
     /**

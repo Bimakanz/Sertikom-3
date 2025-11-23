@@ -47,10 +47,10 @@
                                     <button class="p-2 border rounded-lg hover:bg-gray-100 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21A48.108 48.108 0 0112 
-                                6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5 
-                                19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019 
-                                19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012 
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21A48.108 48.108 0 0112
+                                6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5
+                                19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019
+                                19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012
                                 2V6" />
                                         </svg>
                                     </button>
@@ -65,6 +65,10 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <div class="mt-6">
+                {{ $data->links() }}
+            </div>
         </div>
 
     </div>

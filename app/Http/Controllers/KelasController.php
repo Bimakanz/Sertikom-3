@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\TahunAjar;
@@ -15,7 +16,7 @@ class KelasController extends Controller
      */
     public function index()
     {
-        $kelas = Kelas::with('tahunAjar')->latest()->get();
+        $kelas = Kelas::with('tahunAjar')->latest()->paginate(5);
         return view('kelas.index', compact('kelas'));
     }
 
@@ -35,7 +36,11 @@ class KelasController extends Controller
             'tahun_ajar_id' => 'required|exists:tahun_ajars,id'
         ]);
 
-        Kelas::create($request->all());
+        $kelas = Kelas::create($request->all());
+
+        ActivityLog::create([
+            'description' => 'Kelas Baru Ditambahkan: ' . ($kelas->tahunAjar->nama_tahun_ajar ?? $kelas->nama_kelas)
+        ]);
 
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan');
     }
@@ -53,14 +58,22 @@ class KelasController extends Controller
     }
 
     public function update(Request $request, Kelas $kela)
-    {
+    {   
+         ActivityLog::create([
+            'description' => 'Kelas Diperbarui: ' . ($kela->tahunAjar->nama_tahun_ajar ?? $kela->nama_kelas)
+        ]);
+
         $kela->update($request->all());
 
-    return redirect()->route('kelas.index');
+        return redirect()->route('kelas.index');
     }
 
     public function destroy(Kelas $kelas)
-    {
+    {   
+        ActivityLog::create([
+            'description' => 'Kelas Di Hapus: ' . ($kelas->tahunAjar->nama_tahun_ajar ?? $kelas->nama_kelas)
+        ]);
+        
         $kelas->delete();
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus');
     }
