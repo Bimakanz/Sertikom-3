@@ -4,6 +4,12 @@
         <h1 class="text-2xl font-bold mb-6">Tambah Kelas</h1>
 
         <div class="bg-white p-6 rounded-xl border shadow-sm max-w-xl">
+            @if(session('success'))
+                <div class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
             <form action="{{ route('kelas.store') }}" method="POST">
                 @csrf
 
@@ -29,22 +35,9 @@
                     <select name="jurusan_id"
                             class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
                             required>
-                        <option value="">-- pilih jurusan --</option>
+                        <option value="">-- Pilih Jurusan --</option>
                         @foreach ($jurusan as $j)
                             <option value="{{ $j->id }}">{{ $j->nama_jurusan }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Tahun Ajar --}}
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1">Tahun Ajar</label>
-                    <select name="tahun_ajar_id"
-                            class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
-                            required>
-                        <option value="">-- pilih tahun ajar --</option>
-                        @foreach ($tahunAjar as $t)
-                            <option value="{{ $t->id }}">{{ $t->nama_tahun_ajar }}</option>
                         @endforeach
                     </select>
                 </div>

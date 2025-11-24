@@ -32,8 +32,8 @@ class DashboardController extends Controller
         ->groupBy('level_kelas')
         ->get();
 
-    // recent activity (ambil dari log / model)
-    $recentActivities = ActivityLog::latest()->take(5)->get();
+    // recent activity (ambil dari log / model) dengan pagination
+    $recentActivities = ActivityLog::latest()->paginate(5);
 
     return view('dashboard', compact(
         'siswaCount',

@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the user's role.
+     *
+     * @return string|null
+     */
+    public function getRole()
+    {
+        return $this->attributes['role'] ?? null;
+    }
 }

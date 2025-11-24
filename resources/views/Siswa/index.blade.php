@@ -4,10 +4,31 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <h1 class="text-2xl font-bold">Data Siswa</h1>
 
-            <a href="{{ route('siswa.create') }}"
-               class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 w-full sm:w-auto text-center">
-                + Tambah Siswa
-            </a>
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <form method="GET" action="{{ route('siswa.index') }}" class="w-full sm:w-auto">
+                    <div class="flex">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Cari siswa..." 
+                            value="{{ request('search') }}"
+                            class="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-300 w-full"
+                        >
+                        <button 
+                            type="submit" 
+                            class="px-4 py-2 bg-gray-800 text-white rounded-r-lg hover:bg-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                
+                <a href="{{ route('siswa.create') }}"
+                   class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 w-full sm:w-auto text-center">
+                    + Tambah Siswa
+                </a>
+            </div>
         </div>
 
         @if (session('success'))
@@ -21,22 +42,18 @@
                 <table class="w-full">
                     <thead>
                         <tr class="text-left text-gray-600 text-sm border-b">
-                            <th class="py-3">NISN</th>
                             <th class="py-3">Nama</th>
                             <th class="py-3">Kelas</th>
-                            <th class="py-3">Jurusan</th>
                             <th class="py-3">Tahun Ajar</th>
-                            <th class="py-3 px-7">Aksi</th>
+                            <th class="py-3 px-12">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody class="text-sm">
                         @forelse ($siswa as $item)
                             <tr class="border-b hover:bg-gray-50">
-                                <td class="py-3">{{ $item->nisn }}</td>
                                 <td class="py-3">{{ $item->nama_lengkap }}</td>
                                 <td class="py-3">{{ $item->kelas->level_kelas ?? '-' }}</td>
-                                <td class="py-3">{{ $item->jurusan->nama_jurusan ?? '-' }}</td>
                                 <td class="py-3">{{ $item->tahun_ajar->nama_tahun_ajar ?? '-' }}</td>
 
                                 <td class="py-3 flex items-center gap-2">
@@ -175,11 +192,47 @@
                     <p class="text-center text-gray-500">Belum ada data siswa</p>
                 @endforelse
             </div>
+    <div class="mt-4 sm:mt-6 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Halaman {{ $siswa->currentPage() }} dari {{ $siswa->lastPage() }}
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    {{-- Previous Button --}}
+                    @if ($siswa->onFirstPage())
+                        <span class="p-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    @else
+                        <a href="{{ $siswa->previousPageUrl() }}" 
+                           class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @endif
 
+                    {{-- Next Button --}}
+                    @if ($siswa->hasMorePages())
+                        <a href="{{ $siswa->nextPageUrl() }}" 
+                           class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @else
+                        <span class="p-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    @endif
+                </div>
+            </div>
         </div>
 
-        <div class="mt-6">
-            {{ $siswa->links() }}
-        </div>
+        
     </div>
 </x-app-layout>

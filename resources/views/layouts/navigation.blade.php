@@ -44,7 +44,11 @@
             </x-nav-link>
 
             <!-- Menu guru & admin -->
-            @if(in_array(Auth::user()->role, ['admin', 'guru']))
+            @php
+                $user = auth()->user();
+                $userRole = $user ? $user->role : null;
+            @endphp
+            @if(in_array($userRole, ['admin', 'guru']))
                 <x-nav-link :href="route('siswa.index')" :active="request()->routeIs('siswa.index')"
                     class="gap-3 px-10 mx-4 pb-2 rounded-lg font-semibold transition-all duration-200
                         {{ request()->routeIs('siswa.index') ? 'bg-gray-900 text-white shadow-sm' : 'text-black hover:bg-gray-100 hover:text-black' }}">
@@ -105,7 +109,7 @@
             @endif
 
             <!-- User Management: admin only -->
-            @if(Auth::user()->role === 'admin')
+            @if($userRole === 'admin')
                 <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')"
                     class="gap-3 px-10 mx-4 pb-2 rounded-lg font-semibold transition-all duration-200
                         {{ request()->routeIs('users.*') ? 'bg-gray-900 text-white shadow-sm' : 'text-black hover:bg-gray-100 hover:text-black' }}">
@@ -147,9 +151,15 @@
             </div>
 
             <div class="ml-auto flex items-center gap-4">
+                @php
+                    $user = auth()->user();
+                    $userName = $user ? $user->name : 'User';
+                    $userRole = $user ? ($user->role ?? 'guest') : 'guest';
+                @endphp
+                
                 <div class="hidden md:block">
-                    <span class="text-gray-700 font-medium">{{ Auth::user()->name }}</span>
-                    <div class="text-xs text-gray-500 capitalize">{{ Auth::user()->role }}</div>
+                    <span class="text-gray-700 font-medium">{{ $userName }}</span>
+                    <div class="text-xs text-gray-500 capitalize">{{ $userRole }}</div>
                 </div>
 
                 <x-dropdown align="right" width="48">
@@ -158,7 +168,7 @@
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-full text-gray-500 bg-gray-100 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div
                                 class="relative w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-semibold border-2 border-gray-300">
-                                {{ substr(Auth::user()->name, 0, 1) }}
+                                {{ $user ? substr($user->name, 0, 1) : 'U' }}
                                 <span
                                     class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
                             </div>

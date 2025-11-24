@@ -12,10 +12,22 @@ class TahunAjarController extends Controller
     /**
      * Display a listing of the resource.
      */
-     public function index()
+     public function index(Request $request)
     {
-        $data = TahunAjar::latest()->paginate(3);
-
+        $search = $request->get('search');
+        
+        $query = TahunAjar::query();
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama_tahun_ajar', 'LIKE', "%{$search}%")
+                  ->orWhere('kode_tahun_ajar', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $data = $query->latest()->paginate(3);
+        $data->appends(['search' => $search]);
+        
         return view('tahunajar.index', compact('data'));
     }
 

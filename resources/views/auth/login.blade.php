@@ -16,10 +16,10 @@
     </head>
     <body class="font-sans text-gray-900 antialiased bg-gray-100">
         <div class="min-h-screen flex items-center justify-center">
-            <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-sm">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">Sistem Pendataan Siswa</h1>
-                    <p class="text-gray-600 mt-2">Silakan masuk untuk melanjutkan</p>
+            <div class="w-full max-w-md p-6 sm:p-8 bg-white rounded-xl shadow-sm">
+                <div class="text-center mb-6 sm:mb-8">
+                    <h1 class="text-xl sm:text-3xl font-bold text-gray-800">Sistem Pendataan Siswa</h1>
+                    <p class="text-sm sm:text-base text-gray-600 mt-2">Silakan masuk untuk melanjutkan</p>
                 </div>
 
                 <!-- Session Status -->
@@ -42,10 +42,10 @@
                                required
                                autofocus
                                autocomplete="username"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                                placeholder="Masukkan email Anda">
                         @error('email')
-                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                            <p class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -57,15 +57,15 @@
                                name="password"
                                required
                                autocomplete="current-password"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                                placeholder="Masukkan password">
                         @error('password')
-                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                            <p class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Remember Me -->
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
                         <label for="remember_me" class="flex items-center">
                             <input id="remember_me"
                                    type="checkbox"
@@ -75,21 +75,21 @@
                         </label>
 
                         @if (Route::has('password.request'))
-                            <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                            <a class="text-sm text-gray-600 hover:text-gray-900 text-center sm:text-right" href="{{ route('password.request') }}">
                                 Lupa password?
                             </a>
                         @endif
                     </div>
 
                     <button type="submit"
-                            class="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            class="w-full py-2 sm:py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         Masuk
                     </button>
                 </form>
 
-                <div class="mt-6 text-center">
-                    <p class="text-gray-600 text-sm">
-                        Belum punya akun? <br> <span class="text-gray-600 font-medium">Hubungi administrator untuk mendaftar.</span>
+                <div class="mt-4 sm:mt-6 text-center">
+                    <p class="text-gray-600 text-xs sm:text-sm">
+                        Belum punya akun? <span class="text-gray-600 font-medium">Hubungi administrator untuk mendaftar.</span>
                     </p>
                 </div>
             </div>

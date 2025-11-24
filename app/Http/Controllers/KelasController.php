@@ -14,9 +14,28 @@ class KelasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('tahunAjar')->latest()->paginate(5);
+        $search = $request->get('search');
+        
+        $query = Kelas::with('tahunAjar');
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama_kelas', 'LIKE', "%{$search}%")
+                  ->orWhere('level_kelas', 'LIKE', "%{$search}%")
+                  ->orWhereHas('jurusan', function($q) use ($search) {
+                      $q->where('nama_jurusan', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('tahunAjar', function($q) use ($search) {
+                      $q->where('nama_tahun_ajar', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+        
+        $kelas = $query->latest()->paginate(5);
+        $kelas->appends(['search' => $search]);
+        
         return view('kelas.index', compact('kelas'));
     }
 
