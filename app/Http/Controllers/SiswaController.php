@@ -36,6 +36,7 @@ class SiswaController extends Controller
             });
         }
         
+
         $siswa = $query->latest()->paginate(5);
         $siswa->appends(['search' => $search]);
         
@@ -119,7 +120,10 @@ class SiswaController extends Controller
         $siswa = Siswa::findOrFail($id);
 
         // Check if this is an update from the detail page (only kelas and tahun ajar)
-        if ($request->has('kelas_id') && $request->has('tahun_ajar_id')) {
+        // The detail page form only has kelas_id and tahun_ajar_id, while edit page form has other fields like nisn, nama_lengkap, alamat
+        if ($request->has('kelas_id') && $request->has('tahun_ajar_id') &&
+            (!$request->has('nisn') && !$request->has('nama_lengkap') && !$request->has('alamat'))) {
+            // This is from the detail page - only updating class/year
             // Validate only the fields needed for class/year update
             $request->validate([
                 'kelas_id' => 'required|exists:kelas,id',
@@ -158,22 +162,28 @@ class SiswaController extends Controller
             ]);
 
             return redirect()->route('siswa.show', $siswa->id)->with('success', 'Kelas dan tahun ajar siswa berhasil diperbarui');
+        } else {
 
-            
-        }   else {
             // Standard validation for full edit form (from edit page)
+            // EDIT BIASA - This is from the edit page which has nisn, nama_lengkap, alamat along with kelas and tahun_ajar
+
+
             $request->validate([
                 'nisn' => 'required|unique:siswas,nisn,' . $id,
                 'nama_lengkap' => 'required',
-                'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
-                'tanggal_lahir' => 'required|date',
                 'alamat' => 'required',
                 'kelas_id' => 'required|exists:kelas,id',
-                'jurusan_id' => 'required|exists:jurusans,id',
                 'tahun_ajar_id' => 'required|exists:tahun_ajars,id',
             ]);
 
-            $siswa->update($request->all());
+            // Ambil data dari request kecuali jurusan_id karena akan diambil dari kelas yang dipilih
+            $updateData = $request->only(['nisn', 'nama_lengkap', 'alamat', 'kelas_id', 'tahun_ajar_id']);
+
+            // Ambil jurusan_id dari kelas yang dipilih
+            $kelas = Kelas::findOrFail($request->kelas_id);
+            $updateData['jurusan_id'] = $kelas->jurusan_id;
+
+            $siswa->update($updateData);
 
             ActivityLog::create([
                 'description' => "Data siswa diperbarui: {$siswa->nama_lengkap}"

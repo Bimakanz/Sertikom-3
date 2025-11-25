@@ -83,23 +83,22 @@
                                     </a>
 
                                     {{-- DELETE BUTTON --}}
-                                    <form action="{{ route('siswa.destroy', $item->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus?')">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button class="p-2 border rounded-lg hover:bg-gray-100 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.998-3.21A48.108 48.108 0 0112
-                                                    6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5
-                                                    19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019
-                                                    19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012
-                                                    2V6" />
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    <button
+                                        onclick="showDeleteModal('{{ $item->id }}', '{{ $item->nama_lengkap }}')"
+                                        class="p-2 border rounded-lg hover:bg-gray-100 transition delete-btn"
+                                        data-id="{{ $item->id }}"
+                                        data-name="{{ $item->nama_lengkap }}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.998-3.21A48.108 48.108 0 0112
+                                                6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5
+                                                19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019
+                                                19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012
+                                                2V6" />
+                                        </svg>
+                                    </button>
 
                                 </td>
                             </tr>
@@ -167,24 +166,22 @@
                                 </a>
 
                                 {{-- DELETE BUTTON --}}
-                                <form action="{{ route('siswa.destroy', $item->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin hapus?')">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button class="p-2 border rounded-lg hover:bg-gray-100 transition flex-shrink-0"
-                                        title="Hapus">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.998-3.21A48.108 48.108 0 0112
-                                                6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5
-                                                19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019
-                                                19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012
-                                                2V6" />
-                                            </svg>
-                                        </button>
-                                    </form>
+                                <button
+                                    onclick="showDeleteModal('{{ $item->id }}', '{{ $item->nama_lengkap }}')"
+                                    class="p-2 border rounded-lg hover:bg-gray-100 transition flex-shrink-0 delete-btn"
+                                    data-id="{{ $item->id }}"
+                                    data-name="{{ $item->nama_lengkap }}"
+                                    title="Hapus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.998-3.21A48.108 48.108 0 0112
+                                            6.75c-2.28 0-4.487.155-6.728.46M4.292 5.79L5
+                                            19.25A2.25 2.25 0 007.24 21h9.52A2.25 2.25 0 0019
+                                            19.25l.708-13.46M10 6v-.5a2 2 0 012-2h0a2 2 0 012
+                                            2V6" />
+                                    </svg>
+                                </button>
                                 </div>
 
                     </div>
@@ -233,6 +230,50 @@
             </div>
         </div>
 
-        
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Konfirmasi Hapus</h3>
+                    <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <p class="text-gray-700 mb-4">Apakah Anda yakin ingin menghapus <span id="deleteItemName" class="font-semibold"></span>?</p>
+
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeDeleteModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Batal</button>
+                    <form id="deleteForm" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let deleteForm = document.getElementById('deleteForm');
+
+            function showDeleteModal(id, name) {
+                document.getElementById('deleteItemName').textContent = name;
+                document.getElementById('deleteForm').action = "{{ route('siswa.destroy', ':id') }}".replace(':id', id);
+                document.getElementById('deleteModal').classList.remove('hidden');
+            }
+
+            function closeDeleteModal() {
+                document.getElementById('deleteModal').classList.add('hidden');
+            }
+
+            // Close modal when clicking outside the modal
+            document.getElementById('deleteModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeDeleteModal();
+                }
+            });
+        </script>
     </div>
 </x-app-layout>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="px-4 sm:px-8 py-6 max-w-xl mx-auto">
+    <div class="px-4 sm:px-8 py-6 w-full">
 
         {{-- Judul --}}
         <h1 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Tambah User</h1>

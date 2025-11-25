@@ -3,7 +3,7 @@
 
         <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Edit Jurusan</h1>
 
-        <div class="bg-white p-4 sm:p-6 rounded-xl border shadow-sm max-w-xl mx-auto">
+        <div class="bg-white p-4 sm:p-6 rounded-xl border shadow-sm w-full">
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
                     {{ session('success') }}

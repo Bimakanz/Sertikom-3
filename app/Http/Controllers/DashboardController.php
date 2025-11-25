@@ -22,16 +22,6 @@ class DashboardController extends Controller
     $jurusanCount = Jurusan::count();
     $kelasCount = Kelas::count();
     $userCount = User::count();
-
-    // pendistribusian jurusan
-    $jurusanDistribusi = Jurusan::withCount('siswa')->get();
-
-    // pendistribusian level kelas
-    $kelasDistribusi = Kelas::select('level_kelas')
-        ->selectRaw('COUNT(*) as total')
-        ->groupBy('level_kelas')
-        ->get();
-
     // recent activity (ambil dari log / model) dengan pagination
     $recentActivities = ActivityLog::latest()->paginate(5);
 
@@ -40,8 +30,6 @@ class DashboardController extends Controller
         'jurusanCount',
         'kelasCount',
         'userCount',
-        'jurusanDistribusi',
-        'kelasDistribusi',
         'recentActivities'
     ));
 }

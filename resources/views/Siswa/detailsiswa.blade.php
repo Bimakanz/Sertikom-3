@@ -3,12 +3,21 @@
         <h2 class="text-xl font-semibold">Detail Siswa</h2>
     </x-slot>
 
-    <h1 class="text-2xl font-bold mb-6">Detail Siswa</h1>
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ route('siswa.index') }}"
+            class="p-2 border rounded-lg hover:bg-gray-100 transition" title="Kembali ke daftar siswa">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+        <h1 class="text-2xl font-bold">Detail Siswa</h1>
+    </div>
 
-    <div class="p-6 max-w-4xl mx-auto">
+    <div class="w-full">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {{-- Student Info Card --}}
             <div class="bg-white p-6 rounded-lg shadow">
+                
                 <h3 class="text-xl font-bold mb-2">{{ $siswa->nama_lengkap }}</h3>
 
                 <div class="grid grid-cols-2 gap-y-2 text-sm">
@@ -39,14 +48,14 @@
             {{-- Update Form Card --}}
             <div class="bg-white p-6 rounded-lg shadow">
                 <h3 class="text-xl font-bold mb-4">Update Kelas dan Tahun Ajar</h3>
-                
+
                 {{-- Success Notification --}}
                 @if(session('success'))
                     <div class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
                         {{ session('success') }}
                     </div>
                 @endif
-                
+
                 <form action="{{ route('siswa.update', $siswa->id) }}" method="POST" class="space-y-4">
                     @csrf
                     @method('PUT')
@@ -123,41 +132,49 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <div class="mt-4 sm:mt-6 flex items-center justify-between">
                 <div class="text-sm text-gray-700">
                     Halaman {{ $kelasDetails->currentPage() }} dari {{ $kelasDetails->lastPage() }}
                 </div>
-                
+
                 <div class="flex items-center space-x-2">
                     {{-- Previous Button --}}
                     @if ($kelasDetails->onFirstPage())
                         <span class="p-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd"
+                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </span>
                     @else
-                        <a href="{{ $kelasDetails->previousPageUrl() }}" 
-                           class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                        <a href="{{ $kelasDetails->previousPageUrl() }}"
+                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd"
+                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </a>
                     @endif
 
                     {{-- Next Button --}}
                     @if ($kelasDetails->hasMorePages())
-                        <a href="{{ $kelasDetails->nextPageUrl() }}" 
-                           class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                        <a href="{{ $kelasDetails->nextPageUrl() }}"
+                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd"
+                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </a>
                     @else
                         <span class="p-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd"
+                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </span>
                     @endif

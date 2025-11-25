@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use App\Models\Kelas;
-use App\Models\TahunAjar;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -17,34 +16,29 @@ class KelasController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        
-        $query = Kelas::with('tahunAjar');
-        
+
+        $query = Kelas::with(['jurusan']);
+
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('nama_kelas', 'LIKE', "%{$search}%")
                   ->orWhere('level_kelas', 'LIKE', "%{$search}%")
                   ->orWhereHas('jurusan', function($q) use ($search) {
                       $q->where('nama_jurusan', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('tahunAjar', function($q) use ($search) {
-                      $q->where('nama_tahun_ajar', 'LIKE', "%{$search}%");
                   });
             });
         }
-        
+
         $kelas = $query->latest()->paginate(5);
         $kelas->appends(['search' => $search]);
-        
+
         return view('kelas.index', compact('kelas'));
     }
 
     public function create()
     {
         $jurusan = Jurusan::all();
-        $tahunAjar = TahunAjar::all();
-
-        return view('Kelas.create', compact('jurusan', 'tahunAjar'));
+        return view('Kelas.create', compact('jurusan'));
     }
 
     public function store(Request $request)
@@ -52,13 +46,13 @@ class KelasController extends Controller
         $request->validate([
             'nama_kelas' => 'required',
             'level_kelas' => 'required',
-            'tahun_ajar_id' => 'required|exists:tahun_ajars,id'
+            'jurusan_id' => 'required|exists:jurusans,id',
         ]);
 
         $kelas = Kelas::create($request->all());
 
         ActivityLog::create([
-            'description' => 'Kelas Baru Ditambahkan: ' . ($kelas->tahunAjar->nama_tahun_ajar ?? $kelas->nama_kelas)
+            'description' => 'Kelas Baru Ditambahkan: ' . $kelas->nama_kelas
         ]);
 
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan');
@@ -67,19 +61,23 @@ class KelasController extends Controller
     public function edit(Kelas $kela)
     {
         $jurusan = Jurusan::all();
-        $tahunAjar = TahunAjar::all();
 
         return view('kelas.edit', [
             'kelas' => $kela,
             'jurusan' => $jurusan,
-            'tahunAjar' => $tahunAjar
         ]);
     }
 
     public function update(Request $request, Kelas $kela)
-    {   
-         ActivityLog::create([
-            'description' => 'Kelas Diperbarui: ' . ($kela->tahunAjar->nama_tahun_ajar ?? $kela->nama_kelas)
+    {
+        $request->validate([
+            'nama_kelas' => 'required',
+            'level_kelas' => 'required',
+            'jurusan_id' => 'required|exists:jurusans,id',
+        ]);
+
+        ActivityLog::create([
+            'description' => 'Kelas Diperbarui: ' . $kela->nama_kelas
         ]);
 
         $kela->update($request->all());
@@ -88,11 +86,11 @@ class KelasController extends Controller
     }
 
     public function destroy(Kelas $kelas)
-    {   
+    {
         ActivityLog::create([
-            'description' => 'Kelas Di Hapus: ' . ($kelas->tahunAjar->nama_tahun_ajar ?? $kelas->nama_kelas)
+            'description' => 'Kelas Di Hapus: ' . $kelas->nama_kelas
         ]);
-        
+
         $kelas->delete();
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus');
     }

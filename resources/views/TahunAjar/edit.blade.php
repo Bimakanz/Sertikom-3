@@ -3,7 +3,7 @@
 
         <h1 class="text-2xl font-bold mb-6">Edit Tahun Ajar</h1>
 
-        <div class="bg-white p-6 rounded-xl border shadow-sm max-w-xl">
+        <div class="bg-white p-6 rounded-xl border shadow-sm w-full">
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
                     {{ session('success') }}
