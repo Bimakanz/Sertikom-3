@@ -15,7 +15,7 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        
+
         $query = Siswa::with(['kelas', 'jurusan', 'tahun_ajar']);
         
         if ($search) {

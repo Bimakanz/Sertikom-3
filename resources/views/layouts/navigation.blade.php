@@ -19,7 +19,7 @@
         </div>
 
         <!-- Sidebar Menu -->
-        <nav class="py-6 space-y-1 ">
+        <nav class="py-6 space-y-1 overflow-y-auto max-h-[calc(100vh-120px)]">
 
             <!-- Dashboard: semua role -->
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"

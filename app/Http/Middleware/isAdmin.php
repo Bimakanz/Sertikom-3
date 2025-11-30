@@ -13,14 +13,4 @@ class isAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-
-$check=$request->user()->role;
-
-if(!$check || $check != 'admin'){
-    abort(403, 'Unauthorized Access. Go Back!');
-}
-        return $next($request);
-    }
 }

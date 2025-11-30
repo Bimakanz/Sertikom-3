@@ -1,59 +1,470 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sertikom-3 - Sistem Informasi Sertifikasi Komputer
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem informasi manajemen sertifikasi komputer yang dibangun menggunakan Laravel 11. Aplikasi ini dirancang untuk mengelola data siswa, kelas, jurusan, dan tahun ajar serta mencatat aktivitas sistem.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Manajemen data siswa (NISN, nama, jenis kelamin, tanggal lahir, alamat)
+- Manajemen kelas dan jurusan
+- Manajemen tahun ajar
+- Pelacakan perubahan kelas siswa (riwayat kelas)
+- Catatan aktivitas sistem (Activity Log)
+- Fitur pencarian data
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instalasi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone repository:
+   ```bash
+   git clone <repository-url>
+   cd Sertikom-3
+   ```
 
-## Learning Laravel
+2. Install dependensi:
+   ```bash
+   composer install
+   npm install
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+3. Konfigurasi environment:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. Konfigurasi database di file `.env`
 
-## Laravel Sponsors
+5. Jalankan migrasi dan seeding:
+   ```bash
+   php artisan migrate --seed
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+6. Jalankan aplikasi:
+   ```bash
+   php artisan serve
+   ```
 
-### Premium Partners
+## Struktur Database
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Aplikasi ini menggunakan beberapa tabel utama:
 
-## Contributing
+- `users` - Data pengguna sistem
+- `siswas` - Data siswa (nisn, nama, jenis kelamin, dll)
+- `jurusans` - Data jurusan (nama jurusan, kode jurusan)
+- `kelas` - Data kelas (nama kelas, level kelas, jurusan_id, tahun_ajar_id)
+- `tahun_ajars` - Data tahun ajar (nama_tahun_ajar, kode_tahun_ajar)
+- `kelas_details` - Riwayat perubahan kelas siswa
+- `activity_logs` - Catatan aktivitas sistem
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Fitur Pencarian (Search)
 
-## Code of Conduct
+Fitur pencarian diimplementasikan di `SiswaController.php` menggunakan metode `index`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```php
+public function index(Request $request)
+{
+    $search = $request->get('search');
 
-## Security Vulnerabilities
+    $query = Siswa::with(['kelas', 'jurusan', 'tahun_ajar']);
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    if ($search) {
+        $query->where(function($q) use ($search) {
+            $q->where('ni   sn', 'LIKE', "%{$search}%")
+              ->orWhere('nama_lengkap', 'LIKE', "%{$search}%")
+              ->orWhere('alamat', 'LIKE', "%{$search}%")
+              ->orWhereHas('kelas', function($q) use ($search) {
+                  $q->where('nama_kelas', 'LIKE', "%{$search}%")
+                    ->orWhere('level_kelas', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('jurusan', function($q) use ($search) {
+                  $q->where('nama_jurusan', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('tahun_ajar', function($q) use ($search) {
+                  $q->where('nama_tahun_ajar', 'LIKE', "%{$search}%");
+              });
+        });
+    }
+    // ...
+}
+```
 
-## License
+### Cara Kerja Search:
+- Mencari di beberapa kolom: nisn, nama_lengkap, alamat
+- Mencari di relasi: kelas, jurusan, tahun ajar
+- Menggunakan fungsi `whereHas` untuk mencari pada model terkait
+- Menggunakan fungsi `orWhere` untuk mencari di beberapa kolom secara paralel
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Membuat Database Seeder
+
+Seeder digunakan untuk mengisi data dummy saat pengembangan. Cara membuat seeder:
+
+### 1. Membuat seeder baru:
+```bash
+php artisan make:seeder NamaSeeder
+```
+
+### 2. Contoh struktur seeder:
+```php
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\User; // Ganti dengan model yang sesuai
+
+class UserSeeder extends Seeder
+{
+    public function run()
+    {
+        // Hanya membuat jika belum ada
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'], // Kondisi unik
+            [
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('password'),
+                'role' => 'admin'
+            ]
+        );
+    }
+}
+```
+
+### 3. Menambahkan ke DatabaseSeeder:
+```php
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
+
+    public function run(): void
+    {
+        $this->call([
+            UserSeeder::class,
+            // Tambahkan seeder lain di sini
+        ]);
+    }
+}
+```
+
+### 4. Menjalankan seeder:
+```bash
+# Hanya menjalankan seeder
+php artisan db:seed
+
+# Menjalankan migrasi dan seeder
+php artisan migrate --seed
+
+# Menjalankan seeder tertentu
+php artisan db:seed --class=UserSeeder
+```
+
+## Struktur Folder Penting
+
+```
+app/
+├── Http/
+│   └── Controllers/
+│       ├── SiswaController.php    # Controller utama
+│       └── ...
+├── Models/
+│   ├── Siswa.php                  # Model siswa
+│   ├── Kelas.php                  # Model kelas
+│   ├── Jurusan.php                # Model jurusan
+│   ├── TahunAjar.php              # Model tahun ajar
+│   ├── KelasDetail.php            # Model riwayat kelas
+│   └── ActivityLog.php            # Model log aktivitas
+└── ...
+
+resources/
+├── views/
+│   ├── siswa/                     # View untuk siswa
+│   │   ├── index.blade.php        # Halaman daftar siswa
+│   │   ├── create.blade.php       # Halaman tambah siswa
+│   │   ├── edit.blade.php         # Halaman edit siswa
+│   │   └── detailsiswa.blade.php  # Halaman detail siswa
+│   └── ...
+└── ...
+
+database/
+├── migrations/                    # File migrasi database
+├── seeders/                       # File seeder
+└── factories/                     # File factory
+```
+
+## Hubungan Antar Model (Relationships)
+
+### Siswa Model
+```php
+// Relasi ke kelas
+public function kelas()
+{
+    return $this->belongsTo(Kelas::class);
+}
+
+// Relasi ke tahun ajar
+public function tahun_ajar()
+{
+    return $this->belongsTo(TahunAjar::class, 'tahun_ajar_id','id');
+}
+
+// Relasi ke jurusan
+public function jurusan()
+{
+    return $this->belongsTo(Jurusan::class);
+}
+
+// Relasi ke kelas detail (riwayat kelas)
+public function kelas_details()
+{
+    return $this->hasMany(KelasDetail::class);
+}
+```
+
+### Kelas Model
+```php
+// Relasi ke jurusan
+public function jurusan()
+{
+    return $this->belongsTo(Jurusan::class);
+}
+
+// Relasi ke siswa
+public function siswas()
+{
+    return $this->hasMany(Siswa::class);
+}
+```
+
+## Fitur Update Kelas Siswa
+
+Aplikasi memiliki fitur untuk mengganti kelas siswa yang mencakup:
+
+1. Mengecek apakah permintaan datang dari halaman detail siswa atau halaman edit biasa
+2. Menonaktifkan riwayat kelas sebelumnya (mengganti status menjadi "Tidak Aktif")
+3. Membuat riwayat kelas baru (dengan status "Aktif")
+4. Mencatat aktivitas perubahan
+
+## Catatan Aktivitas Sistem (Activity Log)
+
+Setiap perubahan data siswa (tambah, edit, hapus) akan dicatat di tabel `activity_logs`:
+
+- Ditambahkan saat menyimpan siswa baru
+- Ditambahkan saat mengupdate data siswa
+- Ditambahkan saat mengganti kelas siswa
+- Ditambahkan saat menghapus siswa
+
+## Cara Membuat Fitur-fitur Utama
+
+### 1. Membuat Model
+```bash
+php artisan make:model NamaModel
+```
+
+Contoh lengkap dengan migration dan factory:
+```bash
+php artisan make:model NamaModel -m -f
+```
+
+### 2. Membuat Migration
+```bash
+php artisan make:migration create_nama_table
+```
+
+Struktur migration umum:
+```php
+Schema::create('table_name', function (Blueprint $table) {
+    $table->id();
+    $table->string('nama_field');
+    $table->foreignId('relasi_id')->constrained();
+    $table->timestamps();
+});
+```
+
+### 3. Membuat Controller
+```bash
+php artisan make:controller NamaController
+```
+
+Controller resource (membuat CRUD otomatis):
+```bash
+php artisan make:controller NamaController --resource
+```
+
+### 4. Membuat View
+Buat file Blade dalam folder `resources/views/`:
+```
+resources/views/nama_folder/nama_file.blade.php
+```
+
+### 5. Membuat Route
+Tambahkan di `routes/web.php`:
+```php
+Route::resource('nama', NamaController::class);
+```
+
+Atau route manual:
+```php
+Route::get('/nama', [NamaController::class, 'index'])->name('nama.index');
+Route::post('/nama', [NamaController::class, 'store'])->name('nama.store');
+```
+
+### 6. Membuat Seeder (Penjelasan Ringkas)
+```bash
+php artisan make:seeder NamaSeeder
+```
+
+Struktur dasar seeder:
+```php
+public function run()
+{
+    Model::create([
+        'field' => 'value'
+    ]);
+}
+```
+
+### 7. Membuat Factory
+Factory otomatis dibuat dengan model:
+```bash
+php artisan make:model NamaModel -f
+```
+
+### 8. Membuat Relasi Antar Model
+Contoh relasi `belongsTo`:
+```php
+public function relasi()
+{
+    return $this->belongsTo(ModelRelasi::class);
+}
+```
+
+Contoh relasi `hasMany`:
+```php
+public function relasi()
+{
+    return $this->hasMany(ModelRelasi::class);
+}
+```
+
+### 9. Membuat Fitur Pencarian (Search)
+Contoh dasar pencarian:
+```php
+$query = Model::query();
+
+if ($request->search) {
+    $query->where('field', 'LIKE', "%{$request->search}%");
+}
+```
+
+### 10. Membuat Validasi Formulir
+Di controller:
+```php
+$request->validate([
+    'field' => 'required|unique:table_name,field'
+]);
+```
+
+### 11. Membuat Pagination
+Di controller:
+```php
+$data = Model::paginate(10);
+```
+
+Di view:
+```blade
+{{ $data->links() }}
+```
+
+### 12. Membuat Activity Log
+Di controller setelah operasi:
+```php
+ActivityLog::create([
+    'description' => 'Deskripsi aktivitas'
+]);
+```
+
+## Tips dan Panduan Pengembangan
+
+### 1. Pengelolaan Relasi
+- Gunakan `with()` untuk eager loading relasi untuk mencegah N+1 query problem
+- Gunakan `whereHas()` untuk mencari data berdasarkan relasi
+
+### 2. Validasi Formulir
+- Gunakan `unique` rule untuk mencegah duplikasi data
+- Gunakan `exists` rule untuk memvalidasi foreign keys
+
+### 3. Paginasi
+- Gunakan `paginate()` di controller dan `->links()` di view
+- Gunakan `appends()` untuk mempertahankan parameter pencarian saat paginasi
+
+### 4. Keamanan
+- Selalu hash password sebelum menyimpan
+- Gunakan `bcrypt()` untuk hashing password
+- Gunakan `validated()` untuk mengambil data yang telah divalidasi
+
+## Saran Peningkatan untuk Aplikasi
+
+### 1. Fitur Keamanan
+- Implementasi two-factor authentication (2FA)
+- Tambahkan role-based access control yang lebih kompleks
+- Implementasi rate limiting untuk mencegah abuse API
+- Tambahkan fitur password strength validator
+
+### 2. Performansi
+- Implementasi caching dengan Redis/Memcached
+- Gunakan queue untuk operasi berat (email, notifikasi)
+- Implementasi soft deletes untuk data penting
+- Tambahkan indeks pada kolom yang sering digunakan untuk pencarian
+
+### 3. Antarmuka Pengguna
+- Tambahkan fitur export data (PDF, Excel)
+- Implementasi live search dengan AJAX
+- Tambahkan fitur filter lanjutan (tanggal, rentang usia, dll)
+- Gunakan JavaScript framework (Alpine.js, Vue.js) untuk UX yang lebih interaktif
+
+### 4. Analisis Data
+- Tambahkan dashboard statistik (jumlah siswa per jurusan, per tahun ajar)
+- Implementasi grafik dengan Chart.js atau Laravel Charts
+- Fitur laporan bulanan/tahunan dalam bentuk PDF
+- Sistem notifikasi untuk pengingat penting
+
+### 5. Fitur Tambahan
+- Sistem autentikasi multi-role (admin, guru, siswa)
+- Fitur upload foto siswa
+- Sistem backup otomatis database
+- API endpoints untuk integrasi mobile app
+- Sistem audit trail yang lebih komprehensif
+
+### 6. Testing
+- Implementasi unit test dan feature test
+- Gunakan Laravel Dusk untuk browser testing
+- Implementasi CI/CD pipeline
+- Code coverage analysis
+
+## Komponen Tekis
+
+- **Framework**: Laravel 11
+- **Database**: MySQL (dapat diganti dengan database lain)
+- **CSS Framework**: Tailwind CSS (melalui Vite)
+- **JavaScript**: Vite untuk build assets
+- **Server**: PHP 8.2+
+
+## Kontribusi
+
+Kontribusi sangat diterima! Jika Anda ingin berkontribusi:
+
+1. Fork repository
+2. Buat branch fitur (`git checkout -b fitur/AwesomeFeature`)
+3. Commit perubahan Anda (`git commit -m 'Add some AwesomeFeature'`)
+4. Push ke branch (`git push origin fitur/AwesomeFeature`)
+5. Buka Pull Request
+
+## Lisensi
+
+Project ini dilisensikan di bawah lisensi MIT - lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.

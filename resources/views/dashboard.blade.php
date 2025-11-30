@@ -35,10 +35,10 @@
         </div>
         @php
             $isAdmin = auth()->user()->role === 'admin';
-            $gridCols = $isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
+            $gridCols = $isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3 ' ;
         @endphp
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 {{ $gridCols }} gap-6 mb-6">
+        <div class="grid grid-cols-3 sm:grid-cols-3 {{ $gridCols }} gap-6 mb-6">
             <!-- Total Siswa -->
             <div class="bg-white rounded-xl p-6 border shadow-sm flex items-center w-full">
                 <div class="p-3 rounded-full">

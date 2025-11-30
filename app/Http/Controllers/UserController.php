@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        
+
         $query = User::query();
-        
+
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -24,10 +25,10 @@ class UserController extends Controller
                   ->orWhere('role', 'LIKE', "%{$search}%");
             });
         }
-        
+
         $users = $query->latest()->paginate(5);
         $users->appends(['search' => $search]);
-        
+
         return view('users.index', compact('users'));
     }
 
@@ -40,7 +41,7 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
    public function store(Request $request)
-{   
+{
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
@@ -55,7 +56,7 @@ class UserController extends Controller
         'role' => $request->role,
     ]);
 
-    \App\Models\ActivityLog::create([
+    ActivityLog::create([
         'description' => "User Ditambahkan: {$user->name}"
     ]);
 
@@ -83,13 +84,11 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
-    {   
-        \App\Models\ActivityLog::create([
+    {   ActivityLog::create([
         'description' => "User Di Edit: {$user->name}"
     ]);
 
-        // Check role access (only admin can access user management)
-        $userAuth = auth()->user();
+         $userAuth = auth()->user();
         if ($userAuth->role !== 'admin') {
             abort(403, 'Access denied');
         }
@@ -128,7 +127,7 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(User $user)
-    {   \App\Models\ActivityLog::create([
+    {   ActivityLog::create([
         'description' => "User Di Hapus: {$user->name}"
     ]);
          $user->delete();
