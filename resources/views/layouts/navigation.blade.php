@@ -220,7 +220,7 @@
                 <h3 class="text-lg font-medium text-gray-900 mt-4">Konfirmasi Logout</h3>
                 <p class="text-gray-600 mt-2">Apakah Anda yakin ingin keluar dari sistem?</p>
             </div>
-
+            @auth
             <form method="POST" action="{{ route('logout') }}" class="mt-6">
                 @csrf
                 <div class="flex justify-center gap-3">
@@ -234,6 +234,7 @@
                     </button>
                 </div>
             </form>
+            @endauth
         </div>
     </div>
 </div>

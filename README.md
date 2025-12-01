@@ -10,6 +10,10 @@ Sistem informasi manajemen sertifikasi komputer yang dibangun menggunakan Larave
 - Pelacakan perubahan kelas siswa (riwayat kelas)
 - Catatan aktivitas sistem (Activity Log)
 - Fitur pencarian data
+- Sistem otentikasi dan otorisasi berbasis role (admin, guru, siswa)
+- Dashboard dengan statistik dan aktivitas terbaru
+- Manajemen pengguna sistem (khusus admin)
+- Sistem profil pengguna
 
 ## Instalasi
 
@@ -68,7 +72,7 @@ public function index(Request $request)
 
     if ($search) {
         $query->where(function($q) use ($search) {
-            $q->where('ni   sn', 'LIKE', "%{$search}%")
+            $q->where('nisn', 'LIKE', "%{$search}%")
               ->orWhere('nama_lengkap', 'LIKE', "%{$search}%")
               ->orWhere('alamat', 'LIKE', "%{$search}%")
               ->orWhereHas('kelas', function($q) use ($search) {
@@ -92,6 +96,109 @@ public function index(Request $request)
 - Mencari di relasi: kelas, jurusan, tahun ajar
 - Menggunakan fungsi `whereHas` untuk mencari pada model terkait
 - Menggunakan fungsi `orWhere` untuk mencari di beberapa kolom secara paralel
+
+## Sistem Otorisasi Berbasis Role (Authorization)
+
+Aplikasi ini dilengkapi dengan sistem otorisasi berbasis role menggunakan Laravel Gates yang didefinisikan di `AppServiceProvider.php`:
+
+```php
+public function boot(): void
+{
+    Gate::define('izin-admin', function ($user) {
+        return $user->role === 'admin';
+    });
+
+    Gate::define('izin-guru-admin', function ($user) {
+        return in_array($user->role, ['admin', 'guru']);
+    });
+}
+```
+
+### Jenis Role:
+- `admin`: Akses penuh ke semua fitur, termasuk manajemen pengguna
+- `guru`: Akses ke fitur manajemen siswa, kelas, jurusan, dan tahun ajar
+- `siswa`: Akses terbatas, hanya ke profil dan dashboard
+
+### Implementasi Middleware:
+- `can:izin-admin`: Hanya untuk admin (contoh: manajemen pengguna)
+- `can:izin-guru-admin`: Untuk admin dan guru (contoh: manajemen siswa)
+- `can:izin-siswa`: Untuk semua role termasuk siswa (contoh: dashboard)
+
+## Dashboard dengan Statistik dan Aktivitas
+
+Dashboard menampilkan informasi statistik dan aktivitas terbaru dalam sistem:
+
+### Statistik:
+- Total siswa
+- Total jurusan
+- Total kelas
+- Total pengguna (hanya untuk admin)
+
+### Aktivitas Terbaru:
+- Menampilkan 5 aktivitas terakhir dari tabel `activity_logs`
+- Fitur pagination untuk melihat lebih banyak aktivitas
+- Informasi waktu aktivitas (format: tanggal dan "x waktu yang lalu")
+
+### DashboardController:
+```php
+public function index()
+{
+    $siswaCount = Siswa::count();
+    $jurusanCount = Jurusan::count();
+    $kelasCount = Kelas::count();
+    $userCount = User::count();
+    $recentActivities = ActivityLog::latest()->paginate(5);
+
+    return view('dashboard', compact(
+        'siswaCount',
+        'jurusanCount',
+        'kelasCount',
+        'userCount',
+        'recentActivities'
+    ));
+}
+```
+
+## Struktur Route dengan Grup Middleware
+
+Route diorganisir dalam grup middleware berdasarkan role:
+
+```php
+Route::middleware('auth')->group(function () {
+
+    // Dashboard bebas semua role
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Admin + Guru
+    Route::middleware('can:izin-guru-admin')->group(function () {
+        Route::resource('tahunajar', TahunAjarController::class);
+        Route::resource('jurusan', JurusanController::class);
+        Route::resource('kelas', KelasController::class);
+        Route::resource('siswa', SiswaController::class);
+    });
+
+    // Admin only
+    Route::middleware('can:izin-admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
+
+    // Profile semua role bisa
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+```
+
+## Manajemen Pengguna (User Management)
+
+Fitur manajemen pengguna memungkinkan admin untuk:
+- Melihat daftar pengguna
+- Membuat pengguna baru
+- Mengedit informasi pengguna
+- Menghapus pengguna
+- Mengatur role pengguna (admin, guru, siswa)
+
+Fitur ini hanya tersedia untuk role admin melalui `UserController`.
 
 ## Membuat Database Seeder
 
@@ -170,34 +277,53 @@ php artisan db:seed --class=UserSeeder
 app/
 ├── Http/
 │   └── Controllers/
-│       ├── SiswaController.php    # Controller utama
+│       ├── DashboardController.php    # Controller dashboard
+│       ├── SiswaController.php        # Controller utama siswa
+│       ├── UserController.php         # Controller manajemen pengguna (admin)
+│       ├── TahunAjarController.php    # Controller tahun ajar
+│       ├── JurusanController.php      # Controller jurusan
+│       ├── KelasController.php        # Controller kelas
+│       ├── ProfileController.php      # Controller profil pengguna
 │       └── ...
 ├── Models/
-│   ├── Siswa.php                  # Model siswa
-│   ├── Kelas.php                  # Model kelas
-│   ├── Jurusan.php                # Model jurusan
-│   ├── TahunAjar.php              # Model tahun ajar
-│   ├── KelasDetail.php            # Model riwayat kelas
-│   └── ActivityLog.php            # Model log aktivitas
+│   ├── User.php                     # Model pengguna (dengan role)
+│   ├── Siswa.php                    # Model siswa
+│   ├── Kelas.php                    # Model kelas
+│   ├── Jurusan.php                  # Model jurusan
+│   ├── TahunAjar.php                # Model tahun ajar
+│   ├── KelasDetail.php              # Model riwayat kelas
+│   └── ActivityLog.php              # Model log aktivitas
+├── Providers/
+│   └── AppServiceProvider.php       # Service provider dengan Gate definitions
 └── ...
 
 resources/
 ├── views/
-│   ├── siswa/                     # View untuk siswa
-│   │   ├── index.blade.php        # Halaman daftar siswa
-│   │   ├── create.blade.php       # Halaman tambah siswa
-│   │   ├── edit.blade.php         # Halaman edit siswa
-│   │   └── detailsiswa.blade.php  # Halaman detail siswa
+│   ├── siswa/                       # View untuk siswa
+│   │   ├── index.blade.php          # Halaman daftar siswa
+│   │   ├── create.blade.php         # Halaman tambah siswa
+│   │   ├── edit.blade.php           # Halaman edit siswa
+│   │   └── detailsiswa.blade.php    # Halaman detail siswa
+│   ├── dashboard.blade.php          # Halaman dashboard utama
 │   └── ...
 └── ...
 
 database/
-├── migrations/                    # File migrasi database
-├── seeders/                       # File seeder
-└── factories/                     # File factory
+├── migrations/                      # File migrasi database
+├── seeders/                         # File seeder
+└── factories/                       # File factory
 ```
 
 ## Hubungan Antar Model (Relationships)
+
+### User Model
+```php
+// Role-based access
+public function getRole()
+{
+    return $this->attributes['role'] ?? null;
+}
+```
 
 ### Siswa Model
 ```php
@@ -238,6 +364,15 @@ public function jurusan()
 public function siswas()
 {
     return $this->hasMany(Siswa::class);
+}
+```
+
+### ActivityLog Model
+```php
+// Relasi ke user yang melakukan aktivitas
+public function user()
+{
+    return $this->belongsTo(User::class);
 }
 ```
 
