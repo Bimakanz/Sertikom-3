@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\TahunAjar;
 use Illuminate\Http\Request;
 
@@ -43,60 +42,45 @@ class TahunAjarController extends Controller
             'kode_tahun_ajar' => 'required|unique:tahun_ajars,kode_tahun_ajar',
         ]);
 
-        $item = TahunAjar::create([
+        $tahunajar = TahunAjar::create([
             'nama_tahun_ajar' => $request->nama_tahun_ajar,
             'kode_tahun_ajar' => $request->kode_tahun_ajar,
         ]);
 
-        ActivityLog::create([
-            'description' => "Tahun ajar Baru Ditambahkan: {$item->nama_tahun_ajar}"
-        ]);
 
         return redirect()->route('tahunajar.index')->with('success', 'Tahun ajar berhasil ditambahkan');
     }
 
     public function edit($id)
     {
-        $item = TahunAjar::findOrFail($id);
-        return view('tahunajar.edit', compact('item'));
+        $tahunajar = TahunAjar::findOrFail($id);
+        return view('tahunajar.edit', compact('tahunajar'));
     }
 
     public function update(Request $request, $id)
     {
-        $item = TahunAjar::findOrFail($id);
+        $tahunajar = TahunAjar::findOrFail($id);
 
         $request->validate([
             'nama_tahun_ajar' => 'required|unique:tahun_ajars,nama_tahun_ajar,' . $id,
             'kode_tahun_ajar' => 'required|unique:tahun_ajars,kode_tahun_ajar,' . $id,
         ]);
 
-        $oldName = $item->nama_tahun_ajar;
+        $oldName = $tahunajar->nama_tahun_ajar;
 
-        $item->update([
+        $tahunajar->update([
             'nama_tahun_ajar' => $request->nama_tahun_ajar,
             'kode_tahun_ajar' => $request->kode_tahun_ajar,
         ]);
 
-        ActivityLog::create([
-            'description' => "Tahun ajar diperbarui: {$oldName} -> {$item->nama_tahun_ajar}"
-        ]);
 
         return redirect()->route('tahunajar.index')->with('success', 'Tahun ajar berhasil diperbarui');
     }
 
     public function destroy($id)
-    {   
-        $item = TahunAjar::findOrFail($id);
-
-        ActivityLog::create([
-            'description' => "Tahun ajar Di hapus: {$item->nama_tahun_ajar}"
-        ]);
-
-        $item->delete();
+    {  
+    $tahunajar = TahunAjar::findOrFail($id);
+        $tahunajar->delete();
         return redirect()->route('tahunajar.index')->with('success', 'Tahun ajar berhasil dihapus');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
 }

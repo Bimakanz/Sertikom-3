@@ -100,22 +100,22 @@
             <div class="md:hidden space-y-4">
                 @forelse ($kelas as $item)
                     <div class="border rounded-lg p-4 bg-white shadow-sm">
-                        <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <p class="text-xs text-gray-500">Nama Kelas</p>
-                                <p class="font-medium">{{ $item->nama_kelas }}</p>
+                                <p class="text-xs text-gray-500">Kelas</p>
+                                <p class="font-medium truncate">{{ $item->nama_kelas }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Level</p>
                                 <p class="font-medium">{{ $item->level_kelas }}</p>
                             </div>
-                            <div>
+                            <div class="col-span-2">
                                 <p class="text-xs text-gray-500">Jurusan</p>
                                 <p class="font-medium">{{ $item->jurusan->nama_jurusan }}</p>
                             </div>
                         </div>
 
-                        <div class="flex justify-center space-x-2">
+                        <div class="flex justify-center space-x-3">
                             {{-- EDIT BUTTON --}}
                             <a href="{{ route('kelas.edit', $item->id) }}"
                                 class="p-2 border rounded-lg hover:bg-gray-100 transition flex-shrink-0"

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -56,10 +55,6 @@ class UserController extends Controller
         'role' => $request->role,
     ]);
 
-    ActivityLog::create([
-        'description' => "User Ditambahkan: {$user->name}"
-    ]);
-
     return redirect()->route('users.index')->with('success', 'User berhasil dibuat');
 }
 
@@ -84,9 +79,7 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
-    {   ActivityLog::create([
-        'description' => "User Di Edit: {$user->name}"
-    ]);
+    { 
 
          $userAuth = auth()->user();
         if ($userAuth->role !== 'admin') {
@@ -127,9 +120,7 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(User $user)
-    {   ActivityLog::create([
-        'description' => "User Di Hapus: {$user->name}"
-    ]);
+    {  
          $user->delete();
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
     }

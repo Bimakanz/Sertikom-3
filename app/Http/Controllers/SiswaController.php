@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\TahunAjar;
 use App\Models\KelasDetail;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 
 class SiswaController extends Controller
@@ -82,7 +82,7 @@ class SiswaController extends Controller
 
         // Catat aktivitas
         ActivityLog::create([
-            'description' => "Siswa baru ditambahkan: {$siswa->nama_lengkap}"
+            'description' => "Siswa baru ditambahkan : {$siswa->nama_lengkap}"
         ]);
 
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan');
@@ -158,7 +158,7 @@ class SiswaController extends Controller
             $tahunAjarNama = TahunAjar::find($request->tahun_ajar_id)?->nama_tahun_ajar ?? 'N/A';
 
             ActivityLog::create([
-                'description' => "Kelas dan tahun ajar siswa diperbarui: {$siswa->nama_lengkap} (Kelas: {$kelas->nama_kelas}, Tahun Ajar: {$tahunAjarNama}"
+                'description' => "Kelas dan tahun ajar siswa diperbarui : {$siswa->nama_lengkap} (Kelas: {$kelas->nama_kelas}, Tahun Ajar: {$tahunAjarNama})"
             ]);
 
             return redirect()->route('siswa.show', $siswa->id)->with('success', 'Kelas dan tahun ajar siswa berhasil diperbarui');
@@ -186,7 +186,7 @@ class SiswaController extends Controller
             $siswa->update($updateData);
 
             ActivityLog::create([
-                'description' => "Data siswa diperbarui: {$siswa->nama_lengkap}"
+                'description' => "Data siswa diperbarui : {$siswa->nama_lengkap}"
             ]);
 
             return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diperbarui');
@@ -199,17 +199,12 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::findOrFail($id);
 
+        // Catat aktivitas sebelum menghapus
         ActivityLog::create([
-            'description' => "Siswa dihapus: {$siswa->nama_lengkap}"
+            'description' => "Siswa dihapus : {$siswa->nama_lengkap}"
         ]);
 
-
         $siswa->delete();
-
-
-
-
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus');
-
     }
 }

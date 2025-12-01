@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="px-8 py-6">
+    <div class="px-4 py-6 sm:px-8">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <h1 class="text-2xl font-bold">Data Jurusan</h1>
@@ -7,15 +7,15 @@
             <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <form method="GET" action="{{ route('jurusan.index') }}" class="w-full sm:w-auto">
                     <div class="flex">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Cari jurusan..." 
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Cari jurusan..."
                             value="{{ request('search') }}"
                             class="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-300 w-full"
                         >
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             class="px-4 py-2 bg-gray-800 text-white rounded-r-lg hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -23,14 +23,14 @@
                         </button>
                     </div>
                 </form>
-                
+
                 <a href="{{ route('jurusan.create') }}"
                    class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 w-full sm:w-auto text-center">
                     + Tambah Jurusan
                 </a>
             </div>
         </div>
-        
+
         @if(session('success'))
             <div class="bg-green-100 text-green-800 p-3 rounded-lg mb-4">{{ session('success') }}</div>
         @endif
@@ -40,20 +40,20 @@
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr class="text-gray-600 text-sm border-b">
-                            <th class="py-3 text-left">Kode</th>
-                            <th class="py-3 text-left">Nama Jurusan</th>
-                            <th class="py-3 text-left px-7">Aksi</th>
+                        <tr class="text-left text-gray-600 text-sm border-b">
+                            <th class="py-3">Kode</th>
+                            <th class="py-3">Nama Jurusan</th>
+                            <th class="py-3 px-7">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody class="text-sm">
                         @forelse ($data as $item)
-                            <tr class="border-b text-left hover:bg-gray-50">
-                                <td class="py-3 text-left">{{ $item->kode_jurusan }}</td>
-                                <td class="py-3 text-left">{{ $item->nama_jurusan }}</td>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3">{{ $item->kode_jurusan }}</td>
+                                <td class="py-3">{{ $item->nama_jurusan }}</td>
 
-                                <td class="py-3 text-left flex items-center justify-center gap-2">
+                                <td class="py-3 flex items-center gap-2">
 
                                     {{-- EDIT BUTTON --}}
                                     <a href="{{ route('jurusan.edit', $item->id) }}"
@@ -94,15 +94,15 @@
             </div>
 
             <!-- MOBILE CARD VIEW -->
-            <div class="md:hidden space-y-4">
+            <div class="md:hidden space-y-6">
                 @forelse ($data as $item)
                     <div class="border rounded-lg p-4 bg-white shadow-sm">
                         <div class="mb-3">
-                            <p class="text-xs text-gray-500">Kode</p>
+                            <p class="text-xs text-center text-gray-500">Kode</p>
                             <p class="font-medium text-center">{{ $item->kode_jurusan }}</p>
                         </div>
                         <div class="mb-3">
-                            <p class="text-xs text-gray-500">Nama Jurusan</p>
+                            <p class="text-xs text-center text-gray-500">Nama Jurusan</p>
                             <p class="font-medium text-center">{{ $item->nama_jurusan }}</p>
                         </div>
 
@@ -145,7 +145,7 @@
                 <div class="text-sm text-gray-700">
                     Halaman {{ $data->currentPage() }} dari {{ $data->lastPage() }}
                 </div>
-                
+
                 <div class="flex items-center space-x-2">
                     {{-- Previous Button --}}
                     @if ($data->onFirstPage())
@@ -155,7 +155,7 @@
                             </svg>
                         </span>
                     @else
-                        <a href="{{ $data->previousPageUrl() }}" 
+                        <a href="{{ $data->previousPageUrl() }}"
                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -165,7 +165,7 @@
 
                     {{-- Next Button --}}
                     @if ($data->hasMorePages())
-                        <a href="{{ $data->nextPageUrl() }}" 
+                        <a href="{{ $data->nextPageUrl() }}"
                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />

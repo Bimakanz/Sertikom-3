@@ -49,24 +49,7 @@
                 $userRole = $user ? $user->role : null;
             @endphp
             @if(in_array($userRole, ['admin', 'guru']))
-                <x-nav-link :href="route('siswa.index')" :active="request()->routeIs('siswa.index')"
-                    class="gap-3 px-10 mx-4 pb-2 rounded-lg font-semibold transition-all duration-200
-                        {{ request()->routeIs('siswa.index') ? 'bg-gray-900 text-white shadow-sm' : 'text-black hover:bg-gray-100 hover:text-black' }}">
-                    <!-- SVG Siswa -->
-                    <svg width="40px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.5" />
-                        <path
-                            d="M13 15C13 16.1046 13 17 9 17C5 17 5 16.1046 5 15C5 13.8954 6.79086 13 9 13C11.2091 13 13 13.8954 13 15Z"
-                            stroke="currentColor" stroke-width="1.5" />
-                        <path
-                            d="M22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.298 5.64118 21.5794 6.2255 21.748 7"
-                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        <path d="M19 12H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        <path d="M19 9H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        <path d="M19 15H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    </svg>
-                    <span class="pt-2 px-5 font-bold">Siswa</span>
-                </x-nav-link>
+               
 
                 <x-nav-link :href="route('tahunajar.index')" :active="request()->routeIs('tahunajar.*')"
                     class="gap-3 px-10 mx-4 pb-2 rounded-lg font-semibold transition-all duration-200
@@ -105,6 +88,24 @@
                         </path>
                     </svg>
                     <span class="pt-2 px-[19px] font-bold">Kelas</span>
+                </x-nav-link>
+                 <x-nav-link :href="route('siswa.index')" :active="request()->routeIs('siswa.index')"
+                    class="gap-3 px-10 mx-4 pb-2 rounded-lg font-semibold transition-all duration-200
+                        {{ request()->routeIs('siswa.index') ? 'bg-gray-900 text-white shadow-sm' : 'text-black hover:bg-gray-100 hover:text-black' }}">
+                    <!-- SVG Siswa -->
+                    <svg width="40px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.5" />
+                        <path
+                            d="M13 15C13 16.1046 13 17 9 17C5 17 5 16.1046 5 15C5 13.8954 6.79086 13 9 13C11.2091 13 13 13.8954 13 15Z"
+                            stroke="currentColor" stroke-width="1.5" />
+                        <path
+                            d="M22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.298 5.64118 21.5794 6.2255 21.748 7"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M19 12H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M19 9H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M19 15H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <span class="pt-2 px-5 font-bold">Siswa</span>
                 </x-nav-link>
             @endif
 

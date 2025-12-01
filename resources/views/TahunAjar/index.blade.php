@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="px-8 py-6">
+    <div class="px-4 py-6 sm:px-8">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <h1 class="text-2xl font-bold">Tahun Ajar</h1>
@@ -55,7 +55,7 @@
                             <td class="py-3 flex items-center gap-2">
 
                                 {{-- EDIT BUTTON --}}
-                                <a href="{{ route('tahunajar.edit', $item->id) }}"
+                                <a href="{{ route('tahunajar.edit', $item->id) }}"y
                                     class="p-2 border rounded-lg hover:bg-gray-100 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -91,18 +91,19 @@
                     @endforelse
                 </tbody>
             </table>
-            
+            </div>
+
             <!-- MOBILE CARD VIEW -->
-            <div class="md:hidden space-y-4">
+            <div class="md:hidden space-y-6">
                 @forelse ($data as $item)
                     <div class="border rounded-lg p-4 bg-white shadow-sm">
                         <div class="mb-3">
-                            <p class="text-xs text-gray-500">Kode Tahun Ajar</p>
-                            <p class="font-medium">{{ $item->kode_tahun_ajar }}</p>
+                            <p class="text-xs text-center text-gray-500">Kode Tahun Ajar</p>
+                            <p class="font-medium text-center">{{ $item->kode_tahun_ajar }}</p>
                         </div>
                         <div class="mb-3">
-                            <p class="text-xs text-gray-500">Tahun Ajar</p>
-                            <p class="font-medium">{{ $item->nama_tahun_ajar }}</p>
+                            <p class="text-xs text-center text-gray-500">Tahun Ajar</p>
+                            <p class="font-medium text-center">{{ $item->nama_tahun_ajar }}</p>
                         </div>
 
                         <div class="flex justify-center space-x-2">

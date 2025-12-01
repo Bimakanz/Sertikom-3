@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
@@ -49,11 +48,8 @@ class KelasController extends Controller
             'jurusan_id' => 'required|exists:jurusans,id',
         ]);
 
-        $kelas = Kelas::create($request->all());
+        $kela = Kelas::create($request->all());
 
-        ActivityLog::create([
-            'description' => 'Kelas Baru Ditambahkan: ' . $kelas->nama_kelas
-        ]);
 
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan');
     }
@@ -76,22 +72,15 @@ class KelasController extends Controller
             'jurusan_id' => 'required|exists:jurusans,id',
         ]);
 
-        ActivityLog::create([
-            'description' => 'Kelas Diperbarui: ' . $kela->nama_kelas
-        ]);
-
         $kela->update($request->all());
 
         return redirect()->route('kelas.index');
     }
 
-    public function destroy(Kelas $kelas)
+    public function destroy(Kelas $kela)
     {
-        ActivityLog::create([
-            'description' => 'Kelas Di Hapus: ' . $kelas->nama_kelas
-        ]);
 
-        $kelas->delete();
+        $kela->delete();
         return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus');
     }
 }

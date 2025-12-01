@@ -10,7 +10,7 @@
                 </div>
             @endif
             
-            <form action="{{ route('tahunajar.update', $item->id) }}" method="POST">
+            <form action="{{ route('tahunajar.update', $tahunajar->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -20,7 +20,7 @@
                     <input
                         type="text"
                         name="nama_tahun_ajar"
-                        value="{{ old('nama_tahun_ajar', $item->nama_tahun_ajar) }}"
+                        value="{{ old('nama_tahun_ajar', $tahunajar->nama_tahun_ajar) }}"
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
                         required
                     >
@@ -32,7 +32,7 @@
                     <input
                         type="text"
                         name="kode_tahun_ajar"
-                        value="{{ old('kode_tahun_ajar', $item->kode_tahun_ajar) }}"
+                        value="{{ old('kode_tahun_ajar', $tahunajar ->kode_tahun_ajar) }}"
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-gray-200"
                         required
                     >

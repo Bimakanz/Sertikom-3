@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
 
@@ -75,14 +74,7 @@ class JurusanController extends Controller
     }
 
     public function destroy($id)
-    {   
-        // load the jurusan so we can reference its fields for the activity log
-        $jurusan = Jurusan::findOrFail($id);
-
-        ActivityLog::create([
-            'description' => 'Jurusan di Hapus: ' . ($jurusan->nama_jurusan ?? $jurusan->kode_jurusan)
-        ]);
-
+    {   $jurusan = Jurusan::findOrFail($id);
         $jurusan->delete();
         return redirect()->route('jurusan.index')->with('success', 'Jurusan berhasil dihapus');
     }
