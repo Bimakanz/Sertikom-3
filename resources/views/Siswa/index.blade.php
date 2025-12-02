@@ -43,6 +43,7 @@
                     <thead>
                         <tr class="text-left text-gray-600 text-sm border-b">
                             <th class="py-3">Nama</th>
+                            <th class="py-3">Tahun Ajar</th>
                             <th class="py-3">Kelas</th>
                             <th class="py-3">Jurusan</th>
                             <th class="py-3 px-12">Aksi</th>
@@ -53,8 +54,9 @@
                         @forelse ($siswa as $item)
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="py-3">{{ $item->nama_lengkap }}</td>
+                                <td class="py-3">{{ $item->tahun_ajar->kode_tahun_ajar }}</td>
                                 <td class="py-3">{{ $item->kelas->level_kelas ?? '-' }}</td>
-                                <td class="py-3">{{ $item->jurusan->nama_jurusan ?? '-' }}</td>
+                                <td class="py-3">{{ $item->jurusan->kode_jurusan ?? '-' }}</td>
 
                                 <td class="py-3 flex items-center gap-2">
 
@@ -130,11 +132,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Jurusan</p>
-                                <p class="font-medium">{{ $item->jurusan->nama_jurusan ?? '-' }}</p>
-                            </div>
-                            <div class="col-span-2">
-                                <p class="text-xs text-gray-500">Tahun Ajar</p>
-                                <p class="font-medium">{{ $item->tahun_ajar->nama_tahun_ajar ?? '-' }}</p>
+                                <p class="font-medium">{{ $item->jurusan->kode_jurusan ?? '-' }}</p>
                             </div>
                         </div>
 

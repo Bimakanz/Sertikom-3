@@ -61,6 +61,7 @@ class TahunAjarController extends Controller
     {
         $tahunajar = TahunAjar::findOrFail($id);
 
+
         $request->validate([
             'nama_tahun_ajar' => 'required|unique:tahun_ajars,nama_tahun_ajar,' . $id,
             'kode_tahun_ajar' => 'required|unique:tahun_ajars,kode_tahun_ajar,' . $id,

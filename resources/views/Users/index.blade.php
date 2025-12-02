@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="px-8 py-6">
+    <div class="px-4 py-6 sm:px-8">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <h1 class="text-2xl font-bold">User Management</h1>
@@ -7,15 +7,15 @@
             <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <form method="GET" action="{{ route('users.index') }}" class="w-full sm:w-auto">
                     <div class="flex">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Cari user..." 
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Cari user..."
                             value="{{ request('search') }}"
                             class="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-300 w-full"
                         >
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             class="px-4 py-2 bg-gray-800 text-white rounded-r-lg hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -23,7 +23,7 @@
                         </button>
                     </div>
                 </form>
-                
+
                 <a href="{{ route('users.create') }}"
                     class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 w-full sm:w-auto text-center">
                     + Tambah User
@@ -52,7 +52,7 @@
                         @forelse ($users as $index => $user)
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="py-3">{{ $user->name }}</td>
-                                <td class="py-3">{{ $user->email }}</td>
+                                <td class="py-3 max-w-xs break-words">{{ $user->email }}</td>
                                 <td class="py-3">{{ ucfirst($user->role) }}</td>
                                 <td class="py-3 flex items-center gap-2">
 
@@ -98,22 +98,22 @@
             </div>
 
             <!-- MOBILE CARD VIEW -->
-            <div class="md:hidden space-y-4">
+            <div class="md:hidden space-y-6">
                 @forelse ($users as $index => $user)
                     <div class="border rounded-lg p-4 bg-white shadow-sm">
-                        <div class="grid grid-cols-2 gap-2 mb-3">
-                            <div>
-                                <p class="text-xs text-gray-500">Nama</p>
-                                <p class="font-medium">{{ $user->name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">Email</p>
-                                <p class="font-medium">{{ $user->email }}</p>
-                            </div>
-                            <div class="col-span-2">
-                                <p class="text-xs text-gray-500">Role</p>
-                                <p class="font-medium">{{ ucfirst($user->role) }}</p>
-                            </div>
+                        <div class="mb-3">
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-xs text-center text-gray-500">Nama</p>
+                            <p class="font-medium text-center">{{ $user->name }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-xs text-center text-gray-500">Email</p>
+                            <p class="font-medium text-center break-words max-w-xs">{{ $user->email }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-xs text-center text-gray-500">Role</p>
+                            <p class="font-medium text-center">{{ ucfirst($user->role) }}</p>
                         </div>
 
                         <div class="flex justify-center space-x-2">
@@ -154,11 +154,12 @@
                 @endforelse
             </div>
 
-           <div class="mt-4 sm:mt-6 flex items-center justify-between">
+            <!-- PAGINATION -->
+            <div class="mt-4 sm:mt-6 flex items-center justify-between">
                 <div class="text-sm text-gray-700">
                     Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
                 </div>
-                
+
                 <div class="flex items-center space-x-2">
                     {{-- Previous Button --}}
                     @if ($users->onFirstPage())
@@ -168,7 +169,7 @@
                             </svg>
                         </span>
                     @else
-                        <a href="{{ $users->previousPageUrl() }}" 
+                        <a href="{{ $users->previousPageUrl() }}"
                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -178,7 +179,7 @@
 
                     {{-- Next Button --}}
                     @if ($users->hasMorePages())
-                        <a href="{{ $users->nextPageUrl() }}" 
+                        <a href="{{ $users->nextPageUrl() }}"
                            class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />

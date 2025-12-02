@@ -12,10 +12,6 @@ Route::get('/', fn() => redirect()->route('login'));
 
 Route::middleware('auth')->group(function () {
 
-    // Dashboard bebas semua role
-    Route::middleware('can:izin-siswa')->group(function () {
-
-    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Admin + Guru

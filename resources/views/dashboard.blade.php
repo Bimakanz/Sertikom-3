@@ -19,9 +19,9 @@
             </h2>
             <p class="text-gray-600 text-sm">
                 @if(auth()->user()->role === 'admin')
-                    Anda adalah Administrator Sistem Pendataan Siswa. Gunakan menu di samping kiri untuk mengelola data
-                    siswa,
-                    jurusan, kelas, tahun ajar, serta pengguna sistem. Anda memiliki akses penuh ke semua fitur.
+                    Selamat datang di Dashboard Admin
+                    Kelola data sekolah dengan lebih mudah dan terstruktur.
+                    Ayo pastikan informasi siswa, guru, dan kelas selalu up-to-date!
                 @elseif(auth()->user()->role === 'guru')
                     Anda adalah Guru. Gunakan menu di samping kiri untuk mengelola data siswa, jurusan, kelas, dan tahun
                     ajar.
@@ -112,7 +112,8 @@
             </div>
             <div class="space-y-4">
                 @forelse($recentActivities as $act)
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 min-h-[70px]">
+                    <div
+                        class="flex flex-col sm:flex-row items-start sm:items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 min-h-[70px]">
                         <div class="flex-shrink-0 mt-1 mb-2 sm:mb-0">
                             <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none"
@@ -123,7 +124,8 @@
                             </div>
                         </div>
                         <div class="ml-0 sm:ml-3 flex-1 min-w-0 w-full">
-                            <p class="text-sm font-medium text-gray-800 break-words">{{ $act->title ?? $act->description }}</p>
+                            <p class="text-sm font-medium text-gray-800 break-words">{{ $act->title ?? $act->description }}
+                            </p>
                             @if(isset($act->target) && !empty($act->target))
                                 <p class="text-sm text-gray-700 mt-1 break-words"><span class="font-medium">Target :</span>
                                     {{ $act->target }}</p>
@@ -182,7 +184,7 @@
                         {{-- Next Button --}}
                         @if ($recentActivities->hasMorePages())
                             <a href="{{ $recentActivities->nextPageUrl() }}"
-                               class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                                class="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
                                         d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
